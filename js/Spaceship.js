@@ -36,8 +36,8 @@ export default class Spaceship extends ShapeCreator {
         const currentX = this.normalizePosition(tx, -1, 1, -SPACESHIP_OPTIONS.flyWidthBorder, SPACESHIP_OPTIONS.flyWidthBorder);
         const currentY = this.normalizePosition(ty, -1, 1, SPACESHIP_OPTIONS.flyYBottomMaxCoordinate, SPACESHIP_OPTIONS.flyYTopMaxCoordinate);
 
-        this.mesh.position.x = currentX;
-        this.mesh.position.y = currentY;
+        this.mesh.position.x= currentX;
+        this.mesh.position.y= currentY;
 
         this.turning(currentX);
     }

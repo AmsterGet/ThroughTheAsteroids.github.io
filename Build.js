@@ -141,8 +141,7 @@ const SPACESHIP_OPTIONS = {
         z: 3.6
     },
 
-    flyWidthBorder: WINDOW_OPTIONS.gameWindowWidth*0.0023,
-    flyHeightBorder: WINDOW_OPTIONS.gameWindowHeight*0.0023,
+    flyWidthBorder: 3.1418,
     flyYTopMaxCoordinate: 2.5,
     flyYBottomMaxCoordinate: -0.52,
     turningSpeed: 0.02,
@@ -925,8 +924,8 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
         const currentX = this.normalizePosition(tx, -1, 1, -__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyWidthBorder, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyWidthBorder);
         const currentY = this.normalizePosition(ty, -1, 1, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyYBottomMaxCoordinate, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyYTopMaxCoordinate);
 
-        this.mesh.position.x = currentX;
-        this.mesh.position.y = currentY;
+        this.mesh.position.x= currentX;
+        this.mesh.position.y= currentY;
 
         this.turning(currentX);
     }

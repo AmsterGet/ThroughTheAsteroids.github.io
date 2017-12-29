@@ -61,8 +61,7 @@ export const SPACESHIP_OPTIONS = {
         z: 3.6
     },
 
-    flyWidthBorder: WINDOW_OPTIONS.gameWindowWidth*0.0023,
-    flyHeightBorder: WINDOW_OPTIONS.gameWindowHeight*0.0023,
+    flyWidthBorder: 3.1418,
     flyYTopMaxCoordinate: 2.5,
     flyYBottomMaxCoordinate: -0.52,
     turningSpeed: 0.02,
