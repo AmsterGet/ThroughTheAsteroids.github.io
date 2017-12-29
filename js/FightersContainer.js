@@ -30,29 +30,13 @@ export default class FightersContainer extends ShapeCreator{
     }
 
     addFighter(enemy) {
-        enemy.setRandomPosition();
-
         this.enemiesArray.push(enemy);
         this.mesh.add(enemy.mesh);
-    }
-
-    checkEnemiesDistribution(enemy) {//so the coordinates of each enemy don't match other enemies
-        while (this.enemiesArray.some(
-            (item) => {
-                return (item.mesh.position.x===enemy.mesh.position.x ||
-                    item.mesh.position.y===enemy.mesh.position.y ||
-                    item.mesh.position.z===enemy.mesh.position.z) &&
-                    item!==enemy;
-            }
-        )) {
-            enemy.setRandomPosition();
-        }
     }
 
     randomizeEnemies() {
         this.enemiesArray.forEach((item) => {
             item.setRandomPosition();
-            this.checkEnemiesDistribution(item);
         });
     }
 

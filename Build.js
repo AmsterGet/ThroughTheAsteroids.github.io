@@ -585,12 +585,15 @@ class GameProcess {
     }
 
     checkCollision() {
-        this.fightersContainer.enemiesArray.forEach(( enemy ) => {
-            this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
-                if (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=__WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].maxCrashDistance) {
-                    this.finishGame();
-                }
-        });
+        if (this.fightersContainer.enemiesArray.some((enemy) => {
+                this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
+
+                return (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position) <=
+                    __WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].maxCrashDistance);
+            }
+        )) {
+            this.finishGame();
+        }
     }
 
     finishGame() {
@@ -1014,29 +1017,13 @@ class FightersContainer extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" 
     }
 
     addFighter(enemy) {
-        enemy.setRandomPosition();
-
         this.enemiesArray.push(enemy);
         this.mesh.add(enemy.mesh);
-    }
-
-    checkEnemiesDistribution(enemy) {//so the coordinates of each enemy don't match other enemies
-        while (this.enemiesArray.some(
-            (item) => {
-                return (item.mesh.position.x===enemy.mesh.position.x ||
-                    item.mesh.position.y===enemy.mesh.position.y ||
-                    item.mesh.position.z===enemy.mesh.position.z) &&
-                    item!==enemy;
-            }
-        )) {
-            enemy.setRandomPosition();
-        }
     }
 
     randomizeEnemies() {
         this.enemiesArray.forEach((item) => {
             item.setRandomPosition();
-            this.checkEnemiesDistribution(item);
         });
     }
 

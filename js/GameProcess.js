@@ -174,12 +174,15 @@ export default class GameProcess {
     }
 
     checkCollision() {
-        this.fightersContainer.enemiesArray.forEach(( enemy ) => {
-            this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
-                if (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=SPACESHIP_OPTIONS.maxCrashDistance) {
-                    this.finishGame();
-                }
-        });
+        if (this.fightersContainer.enemiesArray.some((enemy) => {
+                this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
+
+                return (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position) <=
+                    SPACESHIP_OPTIONS.maxCrashDistance);
+            }
+        )) {
+            this.finishGame();
+        }
     }
 
     finishGame() {
