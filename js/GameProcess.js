@@ -1,10 +1,10 @@
-import Scene3D from "./Scene3D";
-import SkyBox from "./SkyBox";
-import GameField from "./GameField";
-import Spaceship from "./Spaceship";
-import FightersContainer from "./FightersContainer";
-import StarCruiser from "./StarCruiser";
-import {SCENE3D_OPTIONS, SPACESHIP_OPTIONS, FINISH_OPTIONS} from "./Constants";
+import Scene3D from './Scene3D';
+import SkyBox from './SkyBox';
+import GameField from './GameField';
+import Spaceship from './Spaceship';
+import FightersContainer from './FightersContainer';
+import StarCruiser from './StarCruiser';
+import {SCENE3D_OPTIONS, SPACESHIP_OPTIONS} from './Constants';
 
 export default class GameProcess {
     constructor(canvas) {
@@ -31,7 +31,6 @@ export default class GameProcess {
         this.spaceship = new Spaceship();
         this.scene3D.scene.add(this.spaceship.mesh);
 
-        debugger;
         this.addEnemies();
     }
 
@@ -79,7 +78,7 @@ export default class GameProcess {
 
         if (this.inGame) {
             this.canvas.classList.remove('hide');
-            menuScreen.classList.add("hide");
+            menuScreen.classList.add('hide');
 
             if (!this.lastSpaceshipPosition) {
                 this.animateIntro();
@@ -90,7 +89,7 @@ export default class GameProcess {
 
         } else {
             this.canvas.classList.add('hide');
-            menuScreen.classList.remove("hide");
+            menuScreen.classList.remove('hide');
             cancelAnimationFrame(this.animationFrameId);
         }
     }
@@ -103,7 +102,7 @@ export default class GameProcess {
             this.spaceship.listenSpaceshipMove();
         }
 
-        this.enemyPosition = new THREE.Vector3();
+        this.enemiesPosition = new THREE.Vector3();
         this.animateGameProcess();
     }
 
@@ -130,7 +129,7 @@ export default class GameProcess {
             this.checkSpaceshipMovement();
 
             this.scene3D.renderer.render(this.scene3D.scene, this.scene3D.camera);
-            this.checkCollision();
+
     }
 
     checkWholeCircle() {
@@ -144,13 +143,17 @@ export default class GameProcess {
 
     checkFightersPosition() {
         if (this.fightersContainer.isNearTheSpaceship()) {
-            this.scene3D.audio.playFightersFly();
-        }
+            this.checkCollision();
 
-        if (this.fightersContainer.isBehindCamera()) {
-            this.fightersContainer.setPrimaryPosition();
-            this.increaseScore();
-            this.fightersContainer.randomizeEnemies();
+            if (this.fightersContainer.isHearFlight()) {
+                this.scene3D.audio.playFightersFly();
+            }
+
+            if (this.fightersContainer.isBehindCamera()) {
+                this.fightersContainer.setPrimaryPosition();
+                this.increaseScore();
+                this.fightersContainer.randomizeEnemies();
+            }
         }
     }
 
@@ -172,8 +175,8 @@ export default class GameProcess {
 
     checkCollision() {
         this.fightersContainer.enemiesArray.forEach(( enemy ) => {
-            this.enemyPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
-                if (this.enemyPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=0.9) {
+            this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
+                if (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=SPACESHIP_OPTIONS.maxCrashDistance) {
                     this.finishGame();
                 }
         });
@@ -211,8 +214,7 @@ export default class GameProcess {
     }
 
     showFinishWindow() {
-        const event = new Event("keydown");
-        event.keyCode = FINISH_OPTIONS.finishCode;
+        const event = new Event('isfinish');
         document.dispatchEvent(event);
     }
 }

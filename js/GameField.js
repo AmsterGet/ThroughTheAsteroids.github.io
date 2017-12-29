@@ -1,5 +1,5 @@
-import ShapeCreator from "./ShapeCreator";
-import {GAMEFIELD_OPTIONS} from "./Constants";
+import ShapeCreator from './ShapeCreator';
+import {GAMEFIELD_OPTIONS} from './Constants';
 
 
 export default class GameField extends ShapeCreator {

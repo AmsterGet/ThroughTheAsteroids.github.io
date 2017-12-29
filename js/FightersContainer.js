@@ -1,6 +1,6 @@
-import ShapeCreator from "./ShapeCreator";
-import Enemy from "./Enemy";
-import {FIGHTERSCONTAINER_OPTIONS, ENEMIES_OPTIONS} from "./Constants";
+import ShapeCreator from './ShapeCreator';
+import Enemy from './Enemy';
+import {FIGHTERSCONTAINER_OPTIONS, ENEMIES_OPTIONS} from './Constants';
 
 export default class FightersContainer extends ShapeCreator{
     constructor() {
@@ -70,6 +70,10 @@ export default class FightersContainer extends ShapeCreator{
     }
 
     isNearTheSpaceship() {
+        return this.mesh.position.z>FIGHTERSCONTAINER_OPTIONS.coordinateZToCheckCollision;
+    }
+
+    isHearFlight() {
         return this.mesh.position.z>FIGHTERSCONTAINER_OPTIONS.coordinateZToPlaySound;
     }
 

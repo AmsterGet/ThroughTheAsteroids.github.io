@@ -4,6 +4,6 @@ export default class ShapeCreator {
     }
 
     createMesh() {
-        throw new Error("Not implemented!");
+        throw new Error('Not implemented!');
     }
 }

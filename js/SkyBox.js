@@ -1,5 +1,5 @@
-import ShapeCreator from "./ShapeCreator";
-import {GLSL_MODULES, SKYBOX_OPTIONS} from "./Constants";
+import ShapeCreator from './ShapeCreator';
+import {GLSL_MODULES, SKYBOX_OPTIONS} from './Constants';
 
 export default class SkyBox extends ShapeCreator  {
 

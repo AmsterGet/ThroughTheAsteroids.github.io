@@ -1,5 +1,5 @@
-import {SCENE3D_OPTIONS} from "./Constants";
-import Audio from "./Audio";
+import {SCENE3D_OPTIONS} from './Constants';
+import Audio from './Audio';
 
 export default class Scene3D {
     constructor(canvas) {

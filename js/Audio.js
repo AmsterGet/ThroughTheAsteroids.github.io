@@ -1,4 +1,4 @@
-import {AUDIO_OPTIONS} from "./Constants";
+import {AUDIO_OPTIONS} from './Constants';
 
 export default class Audio {
     constructor() {

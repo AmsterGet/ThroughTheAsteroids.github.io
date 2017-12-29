@@ -1,6 +1,6 @@
 export const GLSL_MODULES = {
-    sky_vertex: "varying vec2 vUV; void main() {vUV = uv;vec4 pos = vec4(position, 1.0);gl_Position = projectionMatrix * modelViewMatrix * pos;}",
-    sky_fragment: "uniform sampler2D texture;varying vec2 vUV;void main() {vec4 sample = texture2D(texture, vUV);gl_FragColor = vec4(sample.xyz, sample.w);}"
+    sky_vertex: 'varying vec2 vUV; void main() {vUV = uv;vec4 pos = vec4(position, 1.0);gl_Position = projectionMatrix * modelViewMatrix * pos;}',
+    sky_fragment: 'uniform sampler2D texture;varying vec2 vUV;void main() {vec4 sample = texture2D(texture, vUV);gl_FragColor = vec4(sample.xyz, sample.w);}'
 };
 
 export const WINDOW_OPTIONS = {
@@ -68,7 +68,8 @@ export const SPACESHIP_OPTIONS = {
     turningSpeed: 0.02,
     turningBackSpeed: 0.014,
     alignmentPosition: 0,
-    circle: 2*Math.PI
+    circle: 2*Math.PI,
+    maxCrashDistance: 0.9
 };
 
 export const FIGHTERSCONTAINER_OPTIONS = {
@@ -80,7 +81,8 @@ export const FIGHTERSCONTAINER_OPTIONS = {
         z: -90
     },
     maxZCoordinate: 27,
-    coordinateZToPlaySound: 0
+    coordinateZToPlaySound: -6,
+    coordinateZToCheckCollision: -27
 };
 
 export const SCENE3D_OPTIONS = {
@@ -126,6 +128,9 @@ export const STARCRUISER_OPTIONS = {
     turningAngle: 0.01
 };
 
-export const FINISH_OPTIONS = {
-    finishCode: 222
+export const UI_OPTIONS = {
+    loadingStartNumber: 3,
+    loadingInterval: 5,
+    loadingFinishNumber: 103,
+    pauseKey: 27,
 };

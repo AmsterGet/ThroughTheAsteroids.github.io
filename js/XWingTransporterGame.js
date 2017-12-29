@@ -1,43 +1,43 @@
-import GameProcess from "./GameProcess";
-import {FINISH_OPTIONS} from "./Constants";
+import GameProcess from './GameProcess';
+import {UI_OPTIONS} from './Constants';
 
 class XWingTransporterGame {
     constructor() {
-        this.canvas = document.getElementById("canvas");
-        this.menuScreen = document.querySelector("#menu-screen");
-        this.menu=document.querySelector("#menu");
-        this.menuSound=document.querySelector("#menuSound");
+        this.canvas = document.getElementById('canvas');
+        this.menuScreen = document.querySelector('#menu-screen');
+        this.menu=document.querySelector('#menu');
+        this.menuSound=document.querySelector('#menuSound');
         this.scoreBlock=document.querySelector('#score');
 
-        this.historyButton=document.querySelector("#history");
-        this.playButton=document.querySelector("#play");
-        this.aboutButton=document.querySelector("#about");
+        this.historyButton=document.querySelector('#history');
+        this.playButton=document.querySelector('#play');
+        this.aboutButton=document.querySelector('#about');
 
         this.setPlayListener();
     }
 
     setPlayListener() {
-        this.playButton.addEventListener("click", () => {
+        this.playButton.addEventListener('click', () => {
             this.addLoadingPanel();
             this.startLoading();
         });
     }
 
     addLoadingPanel() {
-        this.menu.classList.add("hide");
-        this.loading = document.createElement("div");
-        this.loading.classList = "loading";
+        this.menu.classList.add('hide');
+        this.loading = document.createElement('div');
+        this.loading.classList.add('loading');
         this.menuScreen.appendChild(this.loading);
     }
 
     startLoading() {
-        let percent = 3;
+        let percent = UI_OPTIONS.loadingStartNumber;
         this.game=new GameProcess(this.canvas);
         this.game.init();
 
         let id = setInterval(() => {
-            if(percent === 103) {
-                this.canvas.classList.add("hide-cursor");
+            if(percent === UI_OPTIONS.loadingFinishNumber) {
+                this.canvas.classList.add('hide-cursor');
                 this.clearMenu();
                 this.scoreBlock.classList.remove('hide');
 
@@ -45,15 +45,15 @@ class XWingTransporterGame {
                 this.setPauseListeners();
                 clearInterval(id);
             }
-            this.loading.innerText = `${percent}`+"%";
-            percent += 5;
+            this.loading.innerText = `${percent}`+'%';
+            percent += UI_OPTIONS.loadingInterval;
         }, 250);
-        this.loading.innerText = `${percent}`+"%";
+        this.loading.innerText = `${percent}`+'%';
     }
 
     clearMenu() {
         this.menuScreen.removeChild(this.loading);
-        this.menuScreen.classList.add("hide");
+        this.menuScreen.classList.add('hide');
         this.menuSound.pause();
 
         this.menu.removeChild(this.playButton);
@@ -65,13 +65,13 @@ class XWingTransporterGame {
         this.createPauseMenuElements();
         this.createPauseMenu();
 
-        this.resumeButton.addEventListener('click', (event) => {
+        this.resumeButton.addEventListener('click', () => {
             this.game.pause(this.menuScreen);
         });
 
         this.restartButton.addEventListener('click', () => {
-            this.canvas.classList.remove("hide");
-            this.menuScreen.classList.add("hide");
+            this.canvas.classList.remove('hide');
+            this.menuScreen.classList.add('hide');
 
             if (this.menu.lastChild===this.aboutButton) {
                 this.menu.removeChild(this.aboutButton);
@@ -82,52 +82,55 @@ class XWingTransporterGame {
         });
 
         this.menuButton.addEventListener('click', () => {
-            document.location.href="./index.html";
+            document.location.href='./index.html';
         });
 
         document.addEventListener('keydown', (event) => {
-            if (event.keyCode===27 && !this.game.finish && this.game.inGame) {
+            if (event.keyCode===UI_OPTIONS.pauseKey && !this.game.finish && this.game.inGame) {
                 this.game.pause(this.menuScreen);
             }
 
-            if (event.keyCode===FINISH_OPTIONS.finishCode) {
-                this.createFinishMenu();
-                this.game.pause(this.menuScreen);
-
-            }
         });
 
+        document.addEventListener('isfinish', () => {
+                this.createFinishMenu();
+                this.game.pause(this.menuScreen);
+        });
     }
 
     createPauseMenuElements() {
-        this.menu.classList.remove("hide");
+        this.menu.classList.remove('hide');
 
         this.restartButton=document.createElement('div');
-        this.restartButton.classList.add("button");
+        this.restartButton.classList.add('button');
 
-        this.restartTitle=document.createElement('h3');
-        this.restartTitle.innerText="RESTART";
-        this.restartButton.appendChild(this.restartTitle);
+        const restartTitle=document.createElement('h3');
+        restartTitle.innerText='restart';
+        this.restartButton.appendChild(restartTitle);
         //--------------------------------------------------------------------
         this.resumeButton=document.createElement('div');
-        this.resumeButton.classList.add("button");
+        this.resumeButton.classList.add('button');
 
-        this.resumeTitle=document.createElement('h3');
-        this.resumeTitle.innerText="RESUME";
-        this.resumeButton.appendChild(this.resumeTitle);
+        const resumeTitle=document.createElement('h3');
+        resumeTitle.innerText='resume';
+        this.resumeButton.appendChild(resumeTitle);
         //--------------------------------------------------------------------
         this.menuButton=document.createElement('div');
-        this.menuButton.classList.add("button");
+        this.menuButton.classList.add('button');
 
-        this.menuTitle=document.createElement('h3');
-        this.menuTitle.innerText="MENU";
-        this.menuButton.appendChild(this.menuTitle);
+        const menuTitle=document.createElement('h3');
+        menuTitle.innerText='menu';
+        this.menuButton.appendChild(menuTitle);
     }
 
     createPauseMenu() {
-        this.menu.appendChild(this.resumeButton);
-        this.menu.appendChild(this.restartButton);
-        this.menu.appendChild(this.menuButton);
+        const fragment = document.createDocumentFragment();
+
+        fragment.appendChild(this.resumeButton);
+        fragment.appendChild(this.restartButton);
+        fragment.appendChild(this.menuButton);
+
+        this.menu.appendChild(fragment);
     }
 
     createFinishMenu() {

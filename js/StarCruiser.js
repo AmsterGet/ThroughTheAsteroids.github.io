@@ -1,5 +1,5 @@
-import ShapeCreator from "./ShapeCreator";
-import {STARCRUISER_OPTIONS} from "./Constants";
+import ShapeCreator from './ShapeCreator';
+import {STARCRUISER_OPTIONS} from './Constants';
 
 export default class StarCruiser extends ShapeCreator {
 

@@ -1,4 +1,4 @@
-import ShapeCreator from "./ShapeCreator";
+import ShapeCreator from './ShapeCreator';
 import {ENEMIES_OPTIONS} from './Constants';
 
 export default class Enemy extends ShapeCreator {

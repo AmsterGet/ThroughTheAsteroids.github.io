@@ -69,10 +69,10 @@
 
 "use strict";
 const GLSL_MODULES = {
-    sky_vertex: "varying vec2 vUV; void main() {vUV = uv;vec4 pos = vec4(position, 1.0);gl_Position = projectionMatrix * modelViewMatrix * pos;}",
-    sky_fragment: "uniform sampler2D texture;varying vec2 vUV;void main() {vec4 sample = texture2D(texture, vUV);gl_FragColor = vec4(sample.xyz, sample.w);}"
+    sky_vertex: 'varying vec2 vUV; void main() {vUV = uv;vec4 pos = vec4(position, 1.0);gl_Position = projectionMatrix * modelViewMatrix * pos;}',
+    sky_fragment: 'uniform sampler2D texture;varying vec2 vUV;void main() {vec4 sample = texture2D(texture, vUV);gl_FragColor = vec4(sample.xyz, sample.w);}'
 };
-/* harmony export (immutable) */ __webpack_exports__["f"] = GLSL_MODULES;
+/* harmony export (immutable) */ __webpack_exports__["e"] = GLSL_MODULES;
 
 
 const WINDOW_OPTIONS = {
@@ -96,7 +96,7 @@ const GAMEFIELD_OPTIONS = {
     increaseStep: 0.003,
     wholeCircle: 2*Math.PI
 };
-/* harmony export (immutable) */ __webpack_exports__["e"] = GAMEFIELD_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["d"] = GAMEFIELD_OPTIONS;
 
 
 const ENEMIES_OPTIONS = {
@@ -124,7 +124,7 @@ const SKYBOX_OPTIONS = {
     rotationSpeed: 0.0006,
     increaseStep: 0.0000002
 };
-/* harmony export (immutable) */ __webpack_exports__["h"] = SKYBOX_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["g"] = SKYBOX_OPTIONS;
 
 
 const SPACESHIP_OPTIONS = {
@@ -148,9 +148,10 @@ const SPACESHIP_OPTIONS = {
     turningSpeed: 0.02,
     turningBackSpeed: 0.014,
     alignmentPosition: 0,
-    circle: 2*Math.PI
+    circle: 2*Math.PI,
+    maxCrashDistance: 0.9
 };
-/* harmony export (immutable) */ __webpack_exports__["i"] = SPACESHIP_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["h"] = SPACESHIP_OPTIONS;
 
 
 const FIGHTERSCONTAINER_OPTIONS = {
@@ -162,7 +163,8 @@ const FIGHTERSCONTAINER_OPTIONS = {
         z: -90
     },
     maxZCoordinate: 27,
-    coordinateZToPlaySound: 0
+    coordinateZToPlaySound: -6,
+    coordinateZToCheckCollision: -27
 };
 /* harmony export (immutable) */ __webpack_exports__["c"] = FIGHTERSCONTAINER_OPTIONS;
 
@@ -192,7 +194,7 @@ const SCENE3D_OPTIONS = {
     }
 
 };
-/* harmony export (immutable) */ __webpack_exports__["g"] = SCENE3D_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["f"] = SCENE3D_OPTIONS;
 
 
 const AUDIO_OPTIONS = {
@@ -213,13 +215,16 @@ const STARCRUISER_OPTIONS = {
     },
     turningAngle: 0.01
 };
-/* harmony export (immutable) */ __webpack_exports__["j"] = STARCRUISER_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["i"] = STARCRUISER_OPTIONS;
 
 
-const FINISH_OPTIONS = {
-    finishCode: 222
+const UI_OPTIONS = {
+    loadingStartNumber: 3,
+    loadingInterval: 5,
+    loadingFinishNumber: 103,
+    pauseKey: 27,
 };
-/* harmony export (immutable) */ __webpack_exports__["d"] = FINISH_OPTIONS;
+/* harmony export (immutable) */ __webpack_exports__["j"] = UI_OPTIONS;
 
 
 
@@ -234,7 +239,7 @@ class ShapeCreator {
     }
 
     createMesh() {
-        throw new Error("Not implemented!");
+        throw new Error('Not implemented!');
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = ShapeCreator;
@@ -254,41 +259,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 class XWingTransporterGame {
     constructor() {
-        this.canvas = document.getElementById("canvas");
-        this.menuScreen = document.querySelector("#menu-screen");
-        this.menu=document.querySelector("#menu");
-        this.menuSound=document.querySelector("#menuSound");
+        this.canvas = document.getElementById('canvas');
+        this.menuScreen = document.querySelector('#menu-screen');
+        this.menu=document.querySelector('#menu');
+        this.menuSound=document.querySelector('#menuSound');
         this.scoreBlock=document.querySelector('#score');
 
-        this.historyButton=document.querySelector("#history");
-        this.playButton=document.querySelector("#play");
-        this.aboutButton=document.querySelector("#about");
+        this.historyButton=document.querySelector('#history');
+        this.playButton=document.querySelector('#play');
+        this.aboutButton=document.querySelector('#about');
 
         this.setPlayListener();
     }
 
     setPlayListener() {
-        this.playButton.addEventListener("click", () => {
+        this.playButton.addEventListener('click', () => {
             this.addLoadingPanel();
             this.startLoading();
         });
     }
 
     addLoadingPanel() {
-        this.menu.classList.add("hide");
-        this.loading = document.createElement("div");
-        this.loading.classList = "loading";
+        this.menu.classList.add('hide');
+        this.loading = document.createElement('div');
+        this.loading.classList.add('loading');
         this.menuScreen.appendChild(this.loading);
     }
 
     startLoading() {
-        let percent = 3;
+        let percent = __WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* UI_OPTIONS */].loadingStartNumber;
         this.game=new __WEBPACK_IMPORTED_MODULE_0__GameProcess__["a" /* default */](this.canvas);
         this.game.init();
 
         let id = setInterval(() => {
-            if(percent === 103) {
-                this.canvas.classList.add("hide-cursor");
+            if(percent === __WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* UI_OPTIONS */].loadingFinishNumber) {
+                this.canvas.classList.add('hide-cursor');
                 this.clearMenu();
                 this.scoreBlock.classList.remove('hide');
 
@@ -296,15 +301,15 @@ class XWingTransporterGame {
                 this.setPauseListeners();
                 clearInterval(id);
             }
-            this.loading.innerText = `${percent}`+"%";
-            percent += 5;
+            this.loading.innerText = `${percent}`+'%';
+            percent += __WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* UI_OPTIONS */].loadingInterval;
         }, 250);
-        this.loading.innerText = `${percent}`+"%";
+        this.loading.innerText = `${percent}`+'%';
     }
 
     clearMenu() {
         this.menuScreen.removeChild(this.loading);
-        this.menuScreen.classList.add("hide");
+        this.menuScreen.classList.add('hide');
         this.menuSound.pause();
 
         this.menu.removeChild(this.playButton);
@@ -316,13 +321,13 @@ class XWingTransporterGame {
         this.createPauseMenuElements();
         this.createPauseMenu();
 
-        this.resumeButton.addEventListener('click', (event) => {
+        this.resumeButton.addEventListener('click', () => {
             this.game.pause(this.menuScreen);
         });
 
         this.restartButton.addEventListener('click', () => {
-            this.canvas.classList.remove("hide");
-            this.menuScreen.classList.add("hide");
+            this.canvas.classList.remove('hide');
+            this.menuScreen.classList.add('hide');
 
             if (this.menu.lastChild===this.aboutButton) {
                 this.menu.removeChild(this.aboutButton);
@@ -333,52 +338,55 @@ class XWingTransporterGame {
         });
 
         this.menuButton.addEventListener('click', () => {
-            document.location.href="./index.html";
+            document.location.href='./index.html';
         });
 
         document.addEventListener('keydown', (event) => {
-            if (event.keyCode===27 && !this.game.finish && this.game.inGame) {
+            if (event.keyCode===__WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* UI_OPTIONS */].pauseKey && !this.game.finish && this.game.inGame) {
                 this.game.pause(this.menuScreen);
             }
 
-            if (event.keyCode===__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* FINISH_OPTIONS */].finishCode) {
-                this.createFinishMenu();
-                this.game.pause(this.menuScreen);
-
-            }
         });
 
+        document.addEventListener('isfinish', () => {
+                this.createFinishMenu();
+                this.game.pause(this.menuScreen);
+        });
     }
 
     createPauseMenuElements() {
-        this.menu.classList.remove("hide");
+        this.menu.classList.remove('hide');
 
         this.restartButton=document.createElement('div');
-        this.restartButton.classList.add("button");
+        this.restartButton.classList.add('button');
 
-        this.restartTitle=document.createElement('h3');
-        this.restartTitle.innerText="RESTART";
-        this.restartButton.appendChild(this.restartTitle);
+        const restartTitle=document.createElement('h3');
+        restartTitle.innerText='restart';
+        this.restartButton.appendChild(restartTitle);
         //--------------------------------------------------------------------
         this.resumeButton=document.createElement('div');
-        this.resumeButton.classList.add("button");
+        this.resumeButton.classList.add('button');
 
-        this.resumeTitle=document.createElement('h3');
-        this.resumeTitle.innerText="RESUME";
-        this.resumeButton.appendChild(this.resumeTitle);
+        const resumeTitle=document.createElement('h3');
+        resumeTitle.innerText='resume';
+        this.resumeButton.appendChild(resumeTitle);
         //--------------------------------------------------------------------
         this.menuButton=document.createElement('div');
-        this.menuButton.classList.add("button");
+        this.menuButton.classList.add('button');
 
-        this.menuTitle=document.createElement('h3');
-        this.menuTitle.innerText="MENU";
-        this.menuButton.appendChild(this.menuTitle);
+        const menuTitle=document.createElement('h3');
+        menuTitle.innerText='menu';
+        this.menuButton.appendChild(menuTitle);
     }
 
     createPauseMenu() {
-        this.menu.appendChild(this.resumeButton);
-        this.menu.appendChild(this.restartButton);
-        this.menu.appendChild(this.menuButton);
+        const fragment = document.createDocumentFragment();
+
+        fragment.appendChild(this.resumeButton);
+        fragment.appendChild(this.restartButton);
+        fragment.appendChild(this.menuButton);
+
+        this.menu.appendChild(fragment);
     }
 
     createFinishMenu() {
@@ -399,7 +407,7 @@ new XWingTransporterGame();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SkyBox__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__GameField__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Spaceship__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FightersContainer__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FightersContainer__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__StarCruiser__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Constants__ = __webpack_require__(0);
 
@@ -435,7 +443,6 @@ class GameProcess {
         this.spaceship = new __WEBPACK_IMPORTED_MODULE_3__Spaceship__["a" /* default */]();
         this.scene3D.scene.add(this.spaceship.mesh);
 
-        debugger;
         this.addEnemies();
     }
 
@@ -455,25 +462,25 @@ class GameProcess {
     }
 
     introMovement() {
-        if (this.scene3D.camera.position.z > __WEBPACK_IMPORTED_MODULE_6__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.z) {
+        if (this.scene3D.camera.position.z > __WEBPACK_IMPORTED_MODULE_6__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.z) {
             this.scene3D.camera.position.z--;
         }
-        if (this.scene3D.camera.position.y > __WEBPACK_IMPORTED_MODULE_6__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.y) {
+        if (this.scene3D.camera.position.y > __WEBPACK_IMPORTED_MODULE_6__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.y) {
             this.scene3D.camera.position.y--;
         }
 
         //DEBUG IT
-        if (this.spaceship.mesh.position.z > __WEBPACK_IMPORTED_MODULE_6__Constants__["i" /* SPACESHIP_OPTIONS */].inGameCoordinates.z) {
+        if (this.spaceship.mesh.position.z > __WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].inGameCoordinates.z) {
             this.spaceship.mesh.position.z--;
         }
-        if (this.spaceship.mesh.position.y > __WEBPACK_IMPORTED_MODULE_6__Constants__["i" /* SPACESHIP_OPTIONS */].inGameCoordinates.y) {
+        if (this.spaceship.mesh.position.y > __WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].inGameCoordinates.y) {
             this.spaceship.mesh.position.y--;
         }
     }
 
     isIntroEnd() {
-        if (this.scene3D.camera.position.y === __WEBPACK_IMPORTED_MODULE_6__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.y &&
-            this.scene3D.camera.position.z === __WEBPACK_IMPORTED_MODULE_6__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.z) {
+        if (this.scene3D.camera.position.y === __WEBPACK_IMPORTED_MODULE_6__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.y &&
+            this.scene3D.camera.position.z === __WEBPACK_IMPORTED_MODULE_6__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inGameCoordinates.z) {
             return true;
         }
     }
@@ -483,18 +490,18 @@ class GameProcess {
 
         if (this.inGame) {
             this.canvas.classList.remove('hide');
-            menuScreen.classList.add("hide");
+            menuScreen.classList.add('hide');
 
             if (!this.lastSpaceshipPosition) {
                 this.animateIntro();
             } else {
-                this.spaceship.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_6__Constants__["i" /* SPACESHIP_OPTIONS */].turningBackSpeed;
+                this.spaceship.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].turningBackSpeed;
                 this.animateGameProcess();
             }
 
         } else {
             this.canvas.classList.add('hide');
-            menuScreen.classList.remove("hide");
+            menuScreen.classList.remove('hide');
             cancelAnimationFrame(this.animationFrameId);
         }
     }
@@ -507,7 +514,7 @@ class GameProcess {
             this.spaceship.listenSpaceshipMove();
         }
 
-        this.enemyPosition = new THREE.Vector3();
+        this.enemiesPosition = new THREE.Vector3();
         this.animateGameProcess();
     }
 
@@ -534,7 +541,7 @@ class GameProcess {
             this.checkSpaceshipMovement();
 
             this.scene3D.renderer.render(this.scene3D.scene, this.scene3D.camera);
-            this.checkCollision();
+
     }
 
     checkWholeCircle() {
@@ -548,13 +555,17 @@ class GameProcess {
 
     checkFightersPosition() {
         if (this.fightersContainer.isNearTheSpaceship()) {
-            this.scene3D.audio.playFightersFly();
-        }
+            this.checkCollision();
 
-        if (this.fightersContainer.isBehindCamera()) {
-            this.fightersContainer.setPrimaryPosition();
-            this.increaseScore();
-            this.fightersContainer.randomizeEnemies();
+            if (this.fightersContainer.isHearFlight()) {
+                this.scene3D.audio.playFightersFly();
+            }
+
+            if (this.fightersContainer.isBehindCamera()) {
+                this.fightersContainer.setPrimaryPosition();
+                this.increaseScore();
+                this.fightersContainer.randomizeEnemies();
+            }
         }
     }
 
@@ -576,8 +587,8 @@ class GameProcess {
 
     checkCollision() {
         this.fightersContainer.enemiesArray.forEach(( enemy ) => {
-            this.enemyPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
-                if (this.enemyPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=0.9) {
+            this.enemiesPosition.setFromMatrixPosition( enemy.mesh.matrixWorld );
+                if (this.enemiesPosition.manhattanDistanceTo(this.spaceship.mesh.position)<=__WEBPACK_IMPORTED_MODULE_6__Constants__["h" /* SPACESHIP_OPTIONS */].maxCrashDistance) {
                     this.finishGame();
                 }
         });
@@ -615,8 +626,7 @@ class GameProcess {
     }
 
     showFinishWindow() {
-        const event = new Event("keydown");
-        event.keyCode = __WEBPACK_IMPORTED_MODULE_6__Constants__["d" /* FINISH_OPTIONS */].finishCode;
+        const event = new Event('isfinish');
         document.dispatchEvent(event);
     }
 }
@@ -655,18 +665,18 @@ class Scene3D {
 
     createCamera() {
         this.camera = new THREE.PerspectiveCamera(
-            __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.verticalFieldOfView,
-            __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.aspectRatio,
-            __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.nearPlane,
-            __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.farPlane);
+            __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.verticalFieldOfView,
+            __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.aspectRatio,
+            __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.nearPlane,
+            __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.farPlane);
 
         this.setCameraPrimaryPosition();
         this.scene.add(this.camera);
     }
 
     setCameraPrimaryPosition() {
-        this.camera.position.y = __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inIntroCoordinates.y;
-        this.camera.position.z = __WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].cameraOptions.inIntroCoordinates.z;
+        this.camera.position.y = __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inIntroCoordinates.y;
+        this.camera.position.z = __WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].cameraOptions.inIntroCoordinates.z;
     }
 
     createCommonLight() {
@@ -676,7 +686,7 @@ class Scene3D {
 
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer({canvas: this.canvas});
-        this.renderer.setPixelRatio(__WEBPACK_IMPORTED_MODULE_0__Constants__["g" /* SCENE3D_OPTIONS */].rendererOptions.pixelRatio);
+        this.renderer.setPixelRatio(__WEBPACK_IMPORTED_MODULE_0__Constants__["f" /* SCENE3D_OPTIONS */].rendererOptions.pixelRatio);
     }
 
     createLights() {
@@ -779,19 +789,19 @@ class SkyBox extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default 
 
     createMesh() {
         const uniforms = {
-            texture: { type: 't', value: new THREE.TextureLoader().load(__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].link)}
+            texture: { type: 't', value: new THREE.TextureLoader().load(__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].link)}
         };
 
         const material = new THREE.ShaderMaterial( {
             uniforms:       uniforms,
-            vertexShader:  __WEBPACK_IMPORTED_MODULE_1__Constants__["f" /* GLSL_MODULES */].sky_vertex,
-            fragmentShader: __WEBPACK_IMPORTED_MODULE_1__Constants__["f" /* GLSL_MODULES */].sky_fragment
+            vertexShader:  __WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GLSL_MODULES */].sky_vertex,
+            fragmentShader: __WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GLSL_MODULES */].sky_fragment
         });
 
-        const geometry = new THREE.SphereGeometry(__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].radius,__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].segmentsQuantity,__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].segmentsQuantity);
+        const geometry = new THREE.SphereGeometry(__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].radius,__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].segmentsQuantity,__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].segmentsQuantity);
         this.mesh = new THREE.Mesh( geometry, material );
         this.mesh.scale.set(-1, 1, 1);
-        this.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].angleOfSlope;
+        this.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].angleOfSlope;
         //this.skyBox.eulerOrder = 'XZY';
         //this.skyBox.renderDepth = 1000.0;
         this.setPrimaryPosition();
@@ -803,7 +813,7 @@ class SkyBox extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default 
     }
 
     setPrimarySpeed() {
-        this.movementSpeed=__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].rotationSpeed;
+        this.movementSpeed=__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].rotationSpeed;
     }
 
     movement() {
@@ -811,7 +821,7 @@ class SkyBox extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default 
     }
 
     increaseMovementSpeed() {
-        this.movementSpeed+=__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SKYBOX_OPTIONS */].increaseStep;
+        this.movementSpeed+=__WEBPACK_IMPORTED_MODULE_1__Constants__["g" /* SKYBOX_OPTIONS */].increaseStep;
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = SkyBox;
@@ -836,8 +846,8 @@ class GameField extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
     }
 
     createMesh() {
-        const texture = new THREE.TextureLoader().load( __WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].link );
-        const geometry = new THREE.SphereGeometry(__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].radius,__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].segmentsQuantity,__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].segmentsQuantity);
+        const texture = new THREE.TextureLoader().load( __WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].link );
+        const geometry = new THREE.SphereGeometry(__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].radius,__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].segmentsQuantity,__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].segmentsQuantity);
         const material = new THREE.MeshBasicMaterial({map: texture});
         this.mesh = new THREE.Mesh( geometry, material );
         this.setPrimaryPosition();
@@ -845,12 +855,12 @@ class GameField extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
     }
 
     setPrimaryPosition() {
-        this.mesh.position.y=__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].Coordinates.y;
-        this.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].angleOfSlope;
+        this.mesh.position.y=__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].Coordinates.y;
+        this.mesh.rotation.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].angleOfSlope;
     }
 
     setPrimarySpeed() {
-        this.movementSpeed=__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].rotationSpeed;
+        this.movementSpeed=__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].rotationSpeed;
     }
 
     movement() {
@@ -859,11 +869,11 @@ class GameField extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
 
     increaseMovementSpeed() {
         this.mesh.rotation.x=0;
-        this.movementSpeed+=__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].increaseStep;
+        this.movementSpeed+=__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].increaseStep;
     }
 
     isWholeCircle() {
-        return this.mesh.rotation.x>__WEBPACK_IMPORTED_MODULE_1__Constants__["e" /* GAMEFIELD_OPTIONS */].wholeCircle;
+        return this.mesh.rotation.x>__WEBPACK_IMPORTED_MODULE_1__Constants__["d" /* GAMEFIELD_OPTIONS */].wholeCircle;
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = GameField;
@@ -891,15 +901,15 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
     createMesh() {
         this.mesh = new THREE.Object3D();
         this.plane = new THREE.ObjectLoader();
-        this.plane.load( __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].link, ( object ) => {
+        this.plane.load( __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].link, ( object ) => {
             this.mesh.add(object);
         });
         this.setPrimaryPosition();
     }
 
     setPrimaryPosition() {
-        this.mesh.position.z = __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].inIntroCoordinates.z;
-        this.mesh.position.y = __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].inIntroCoordinates.y;
+        this.mesh.position.z = __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].inIntroCoordinates.z;
+        this.mesh.position.y = __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].inIntroCoordinates.y;
         this.mesh.rotation.z=0;
     }
 
@@ -912,8 +922,8 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
         let tx = -1 + (event.clientX / __WEBPACK_IMPORTED_MODULE_1__Constants__["k" /* WINDOW_OPTIONS */].gameWindowWidth)*2;
         let ty = 1 - (event.clientY / __WEBPACK_IMPORTED_MODULE_1__Constants__["k" /* WINDOW_OPTIONS */].gameWindowHeight)*2;
 
-        const currentX = this.normalizePosition(tx, -1, 1, -__WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].flyWidthBorder, __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].flyWidthBorder);
-        const currentY = this.normalizePosition(ty, -1, 1, __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].flyYBottomMaxCoordinate, __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].flyYTopMaxCoordinate);
+        const currentX = this.normalizePosition(tx, -1, 1, -__WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyWidthBorder, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyWidthBorder);
+        const currentY = this.normalizePosition(ty, -1, 1, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyYBottomMaxCoordinate, __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].flyYTopMaxCoordinate);
 
         this.mesh.position.x = currentX;
         this.mesh.position.y = currentY;
@@ -923,10 +933,10 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
 
     turning(currentX) {
         if (currentX>this.lastTurnCoordinateX) {
-            this.mesh.rotation.z += __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].turningSpeed;
+            this.mesh.rotation.z += __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].turningSpeed;
         }
         else {
-            this.mesh.rotation.z -= __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].turningSpeed;
+            this.mesh.rotation.z -= __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].turningSpeed;
         }
         this.lastTurnCoordinateX = currentX;
     }
@@ -937,18 +947,18 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
     }
 
     alignSpaceship() {
-        if (this.mesh.rotation.z > __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].alignmentPosition &&
-            this.mesh.rotation.z < __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].circle ) {
-            this.mesh.rotation.z -= __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].turningBackSpeed;
+        if (this.mesh.rotation.z > __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].alignmentPosition &&
+            this.mesh.rotation.z < __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].circle ) {
+            this.mesh.rotation.z -= __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].turningBackSpeed;
         }
 
-        if (this.mesh.rotation.z < __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].alignmentPosition &&
-            this.mesh.rotation.z >- __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].circle ) {
-            this.mesh.rotation.z += __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].turningBackSpeed;
+        if (this.mesh.rotation.z < __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].alignmentPosition &&
+            this.mesh.rotation.z >- __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].circle ) {
+            this.mesh.rotation.z += __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].turningBackSpeed;
         }
 
-        if (this.mesh.rotation.z > __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].circle ||
-            this.mesh.rotation.z <- __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* SPACESHIP_OPTIONS */].circle) {
+        if (this.mesh.rotation.z > __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].circle ||
+            this.mesh.rotation.z <- __WEBPACK_IMPORTED_MODULE_1__Constants__["h" /* SPACESHIP_OPTIONS */].circle) {
             this.mesh.rotation.z=0;
         }
     }
@@ -971,85 +981,7 @@ class Spaceship extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* defau
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Constants__ = __webpack_require__(0);
-
-
-
-class Enemy extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default */] {
-
-    constructor() {
-        super();
-    }
-
-    createMesh() {
-        this.mesh=new THREE.Object3D();
-    }
-
-    setRandomPosition() {
-        let xPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.xBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.xInterval);//-3+Math.random()*(6);
-        let yPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.yBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.yInterval);//29.5+Math.random()*(3.8);
-        let zPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.zBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.zInterval);//-18+Math.random()*(36);
-
-        this.mesh.position.x = xPosition;
-        this.mesh.position.y = yPosition;
-        this.mesh.position.z = zPosition;
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = Enemy;
-
-
-
-/***/ }),
-/* 10 */,
-/* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Constants__ = __webpack_require__(0);
-
-
-
-class StarCruiser extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default */] {
-
-    constructor() {
-        super();
-    }
-
-    createMesh() {
-        this.mesh=new THREE.Object3D();
-        this.ship=new THREE.ObjectLoader();
-        this.ship.load( __WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* STARCRUISER_OPTIONS */].link, ( object ) => {
-            this.mesh.add(object);
-        });
-
-        this.setPrimaryPosition();
-    }
-
-    setPrimaryPosition() {
-        this.mesh.position.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* STARCRUISER_OPTIONS */].distanceCoordinates.z;
-        this.mesh.position.y=__WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* STARCRUISER_OPTIONS */].distanceCoordinates.y;
-        this.mesh.rotation.y=Math.PI/2;
-    }
-
-    move() {
-        if (this.mesh.rotation.y<Math.PI) {
-            this.mesh.rotation.y+=__WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* STARCRUISER_OPTIONS */].turningAngle;
-        }
-    }
-
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = StarCruiser;
-
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Enemy__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Enemy__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Constants__ = __webpack_require__(0);
 
 
@@ -1123,6 +1055,10 @@ class FightersContainer extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" 
     }
 
     isNearTheSpaceship() {
+        return this.mesh.position.z>__WEBPACK_IMPORTED_MODULE_2__Constants__["c" /* FIGHTERSCONTAINER_OPTIONS */].coordinateZToCheckCollision;
+    }
+
+    isHearFlight() {
         return this.mesh.position.z>__WEBPACK_IMPORTED_MODULE_2__Constants__["c" /* FIGHTERSCONTAINER_OPTIONS */].coordinateZToPlaySound;
     }
 
@@ -1135,6 +1071,83 @@ class FightersContainer extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" 
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = FightersContainer;
+
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Constants__ = __webpack_require__(0);
+
+
+
+class Enemy extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default */] {
+
+    constructor() {
+        super();
+    }
+
+    createMesh() {
+        this.mesh=new THREE.Object3D();
+    }
+
+    setRandomPosition() {
+        let xPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.xBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.xInterval);//-3+Math.random()*(6);
+        let yPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.yBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.yInterval);//29.5+Math.random()*(3.8);
+        let zPosition = __WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.zBottomBorder+Math.random()*(__WEBPACK_IMPORTED_MODULE_1__Constants__["b" /* ENEMIES_OPTIONS */].positionBorders.zInterval);//-18+Math.random()*(36);
+
+        this.mesh.position.x = xPosition;
+        this.mesh.position.y = yPosition;
+        this.mesh.position.z = zPosition;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Enemy;
+
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Constants__ = __webpack_require__(0);
+
+
+
+class StarCruiser extends __WEBPACK_IMPORTED_MODULE_0__ShapeCreator__["a" /* default */] {
+
+    constructor() {
+        super();
+    }
+
+    createMesh() {
+        this.mesh=new THREE.Object3D();
+        this.ship=new THREE.ObjectLoader();
+        this.ship.load( __WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* STARCRUISER_OPTIONS */].link, ( object ) => {
+            this.mesh.add(object);
+        });
+
+        this.setPrimaryPosition();
+    }
+
+    setPrimaryPosition() {
+        this.mesh.position.z=__WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* STARCRUISER_OPTIONS */].distanceCoordinates.z;
+        this.mesh.position.y=__WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* STARCRUISER_OPTIONS */].distanceCoordinates.y;
+        this.mesh.rotation.y=Math.PI/2;
+    }
+
+    move() {
+        if (this.mesh.rotation.y<Math.PI) {
+            this.mesh.rotation.y+=__WEBPACK_IMPORTED_MODULE_1__Constants__["i" /* STARCRUISER_OPTIONS */].turningAngle;
+        }
+    }
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = StarCruiser;
 
 
 
