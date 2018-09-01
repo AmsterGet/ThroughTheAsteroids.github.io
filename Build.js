@@ -83,7 +83,7 @@ const WINDOW_OPTIONS = {
 
 
 const GAMEFIELD_OPTIONS = {
-    link: './res/images/DS.jpg',
+    link: './assets/res/images/DS.jpg',
     radius: 30,
     segmentsQuantity: 90,
     angleOfSlope: Math.PI/3,
@@ -101,7 +101,7 @@ const GAMEFIELD_OPTIONS = {
 
 const ENEMIES_OPTIONS = {
     object: [],
-    link: './res/JSON_Models/TIE_Fighter.json',
+    link: './assets/res/JSON_Models/TIE_Fighter.json',
     minQuantity: 33,
     interval: 12,
     positionBorders: {
@@ -117,7 +117,7 @@ const ENEMIES_OPTIONS = {
 
 
 const SKYBOX_OPTIONS = {
-    link: './res/images/hubble-min.jpg',
+    link: './assets/res/images/hubble-min.jpg',
     radius: 1100,
     segmentsQuantity: 300,
     angleOfSlope: Math.PI/3,
@@ -128,7 +128,7 @@ const SKYBOX_OPTIONS = {
 
 
 const SPACESHIP_OPTIONS = {
-    link: './res/JSON_Models/spaceship.json',
+    link: './assets/res/JSON_Models/spaceship.json',
     inIntroCoordinates: {
         x: 0,
         y: 89.3,
@@ -197,16 +197,16 @@ const SCENE3D_OPTIONS = {
 
 
 const AUDIO_OPTIONS = {
-    mainAudioLink: './sounds/MainSound.mp3',
-    fightersFlyAudioLink: './sounds/FightersFly.mp3',
-    failAudioLink: './sounds/FinalSound.mp3',
-    menuAudioLink: './sounds/MenuSound.mp3'
+    mainAudioLink: './assets/sounds/MainSound.mp3',
+    fightersFlyAudioLink: './assets/sounds/FightersFly.mp3',
+    failAudioLink: './assets/sounds/FinalSound.mp3',
+    menuAudioLink: './assets/sounds/MenuSound.mp3'
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = AUDIO_OPTIONS;
 
 
 const STARCRUISER_OPTIONS = {
-    link: './res/JSON_Models/destroyer.json',
+    link: './assets/res/JSON_Models/destroyer.json',
     distanceCoordinates: {
         x: 0,
         y: 6,
@@ -337,7 +337,7 @@ class XWingTransporterGame {
         });
 
         this.menuButton.addEventListener('click', () => {
-            document.location.href='./index.html';
+            document.location.href='../index.html';
         });
 
         document.addEventListener('keydown', (event) => {

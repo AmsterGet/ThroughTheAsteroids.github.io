@@ -1,7 +1,7 @@
 module.exports= {
-    entry: './js/XWingTransporterGame',
+    entry: './src/XWingTransporterGame',
     output: {
-        filename: 'Build.js',
+        filename: 'Build.js'
     },
     watch: true,
     devtool: 'source-map',
