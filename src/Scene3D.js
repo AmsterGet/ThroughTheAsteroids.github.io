@@ -1,4 +1,4 @@
-import {SCENE3D_OPTIONS} from './Constants';
+import { SCENE3D_OPTIONS } from './Constants';
 import Audio from './Audio';
 
 export default class Scene3D {
@@ -16,7 +16,7 @@ export default class Scene3D {
     }
 
     createAudio() {
-        this.audio=new Audio();
+        this.audio = new Audio();
         this.camera.add(this.audio.listener);
     }
 

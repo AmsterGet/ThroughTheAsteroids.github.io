@@ -1,5 +1,5 @@
 import GameProcess from './GameProcess';
-import {UI_OPTIONS} from './Constants';
+import { UI_OPTIONS } from './Constants';
 
 class XWingTransporterGame {
     constructor() {
@@ -32,7 +32,7 @@ class XWingTransporterGame {
 
     startLoading() {
         let percent = UI_OPTIONS.loadingStartNumber;
-        this.game=new GameProcess(this.canvas);
+        this.game = new GameProcess(this.canvas);
         this.game.init();
 
         let id = setInterval(() => {

@@ -287,7 +287,7 @@ class XWingTransporterGame {
 
     startLoading() {
         let percent = __WEBPACK_IMPORTED_MODULE_1__Constants__["j" /* UI_OPTIONS */].loadingStartNumber;
-        this.game=new __WEBPACK_IMPORTED_MODULE_0__GameProcess__["a" /* default */](this.canvas);
+        this.game = new __WEBPACK_IMPORTED_MODULE_0__GameProcess__["a" /* default */](this.canvas);
         this.game.init();
 
         let id = setInterval(() => {
@@ -661,7 +661,7 @@ class Scene3D {
     }
 
     createAudio() {
-        this.audio=new __WEBPACK_IMPORTED_MODULE_1__Audio__["a" /* default */]();
+        this.audio = new __WEBPACK_IMPORTED_MODULE_1__Audio__["a" /* default */]();
         this.camera.add(this.audio.listener);
     }
 
